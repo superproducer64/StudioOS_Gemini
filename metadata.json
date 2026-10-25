@@ -1,0 +1,6 @@
+{
+  "name": "StudioOS — BGP Studios",
+  "description": "Internal operating dashboard and AI chief-of-staff tool for managing projects, tasks, income, expenses, and priorities across BGP Studios.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

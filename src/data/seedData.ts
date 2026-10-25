@@ -1,0 +1,288 @@
+import {
+  PriorityLevel,
+  Project,
+  ProjectStatus,
+  Task,
+  TaskStatus,
+  Transaction,
+  TransactionType,
+} from '../types/studioos.ts';
+
+function offsetDate(daysFromToday: number): string {
+  const date = new Date();
+  date.setDate(date.getDate() + daysFromToday);
+  return date.toISOString().split('T')[0];
+}
+
+function currentMonthDate(dayOfMonth: number): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(Math.min(dayOfMonth, 28)).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+export function getInitialSeedData(): {
+  projects: Project[];
+  tasks: Task[];
+  transactions: Transaction[];
+} {
+  const nowIso = new Date().toISOString();
+
+  const projects: Project[] = [
+    {
+      id: 'proj-caddlatch',
+      name: 'Caddlatch',
+      description: 'iOS golf utility and caddie yardage companion app submitted to Apple App Store Connect.',
+      status: ProjectStatus.Review,
+      priority: PriorityLevel.High,
+      client: null,
+      revenue_model: '$2.99 app purchase',
+      unbilled_amount: 0,
+      next_action: 'Check App Store review status',
+      due_date: offsetDate(1),
+      github_repo: 'bgp-studios/caddlatch-ios',
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+    {
+      id: 'proj-pour-across-america',
+      name: 'Pour Across America',
+      description: 'Custom beverage tasting passport and event operations platform built for client Diana.',
+      status: ProjectStatus.Active,
+      priority: PriorityLevel.High,
+      client: 'Diana',
+      revenue_model: 'Client retainer & hourly ($2,400 unbilled)',
+      unbilled_amount: 2400,
+      next_action: 'Review unbilled development hours',
+      due_date: offsetDate(2),
+      github_repo: 'bgp-studios/pour-across-america',
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+    {
+      id: 'proj-mars-roofing',
+      name: 'Mars Roofing',
+      description: 'Website operations, storm-lead capture funnel, and monthly performance reporting.',
+      status: ProjectStatus.Active,
+      priority: PriorityLevel.Normal,
+      client: 'Mars Roofing & Exteriors',
+      revenue_model: 'Monthly service',
+      unbilled_amount: 450,
+      next_action: 'Prepare monthly maintenance report',
+      due_date: offsetDate(4),
+      github_repo: 'bgp-studios/mars-roofing-web',
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+    {
+      id: 'proj-intro',
+      name: 'Intro',
+      description: 'Warm introduction and relationship graph product currently running with initial beta cohort.',
+      status: ProjectStatus.Active,
+      priority: PriorityLevel.Normal,
+      client: null,
+      revenue_model: 'Freemium SaaS subscription',
+      unbilled_amount: 0,
+      next_action: 'Review current beta feedback',
+      due_date: offsetDate(6),
+      github_repo: 'bgp-studios/intro-app',
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+    {
+      id: 'proj-fab',
+      name: 'FAB',
+      description: 'New internal BGP Studios product concept in feature scoping phase.',
+      status: ProjectStatus.Planning,
+      priority: PriorityLevel.Normal,
+      client: null,
+      revenue_model: 'Internal product / TBD',
+      unbilled_amount: 0,
+      next_action: 'Define MVP feature list',
+      due_date: offsetDate(12),
+      github_repo: 'bgp-studios/fab-mvp',
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+    {
+      id: 'proj-signalos',
+      name: 'SignalOS',
+      description: 'Curated signal intelligence and market monitoring engine.',
+      status: ProjectStatus.Planning,
+      priority: PriorityLevel.Low,
+      client: null,
+      revenue_model: 'Internal intelligence tool',
+      unbilled_amount: 0,
+      next_action: 'Define first information sources',
+      due_date: offsetDate(20),
+      github_repo: 'bgp-studios/signalos',
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+  ];
+
+  const tasks: Task[] = [
+    {
+      id: 'task-paa-unbilled',
+      project_id: 'proj-pour-across-america',
+      title: 'Review unbilled development hours (32 hrs logged for Diana)',
+      description: 'Reconcile September sprint commits against Diana retainer and summarize $2,400 unbilled work.',
+      status: TaskStatus.Open,
+      priority: PriorityLevel.Critical,
+      due_date: offsetDate(-2), // Overdue by 2 days
+      completed_at: null,
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+    {
+      id: 'task-caddlatch-review',
+      project_id: 'proj-caddlatch',
+      title: 'Check App Store review status and verify Resolution Center notes',
+      description: 'Confirm build 1.0.4 passed Apple review or respond to reviewer metadata inquiry.',
+      status: TaskStatus.InProgress,
+      priority: PriorityLevel.High,
+      due_date: offsetDate(-1), // Overdue by 1 day
+      completed_at: null,
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+    {
+      id: 'task-mars-report',
+      project_id: 'proj-mars-roofing',
+      title: 'Prepare monthly maintenance report for Mars Roofing & Exteriors',
+      description: 'Compile uptime metrics, SSL/security patch log, and September storm lead form conversions.',
+      status: TaskStatus.Open,
+      priority: PriorityLevel.Normal,
+      due_date: offsetDate(2),
+      completed_at: null,
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+    {
+      id: 'task-intro-beta',
+      project_id: 'proj-intro',
+      title: 'Review current beta feedback from first 18 test users',
+      description: 'Tag top onboarding friction points and rank top 3 fixes for next beta build.',
+      status: TaskStatus.Open,
+      priority: PriorityLevel.Normal,
+      due_date: offsetDate(4),
+      completed_at: null,
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+    {
+      id: 'task-paa-api',
+      project_id: 'proj-pour-across-america',
+      title: 'Confirm venue check-in QR webhook with Diana',
+      description: 'Waiting on Diana to approve final event check-in copy before pushing to production.',
+      status: TaskStatus.Waiting,
+      priority: PriorityLevel.High,
+      due_date: offsetDate(3),
+      completed_at: null,
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+    {
+      id: 'task-fab-mvp',
+      project_id: 'proj-fab',
+      title: 'Define MVP feature list and v0.1 scope boundary',
+      description: 'Write concise 1-page architecture and core user loop spec.',
+      status: TaskStatus.Open,
+      priority: PriorityLevel.Normal,
+      due_date: offsetDate(10),
+      completed_at: null,
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+    {
+      id: 'task-signalos-sources',
+      project_id: 'proj-signalos',
+      title: 'Define first information sources and RSS/API feeds',
+      description: 'Select initial 10 high-signal sources for prototype ingestion.',
+      status: TaskStatus.Open,
+      priority: PriorityLevel.Low,
+      due_date: offsetDate(18),
+      completed_at: null,
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+    {
+      id: 'task-caddlatch-screenshots',
+      project_id: 'proj-caddlatch',
+      title: 'Upload 6.7-inch App Store Connect screenshots',
+      description: 'Finalized product screenshots uploaded for release submission.',
+      status: TaskStatus.Completed,
+      priority: PriorityLevel.High,
+      due_date: offsetDate(-4),
+      completed_at: nowIso,
+      created_at: nowIso,
+      updated_at: nowIso,
+    },
+  ];
+
+  const transactions: Transaction[] = [
+    {
+      id: 'tx-paa-milestone',
+      project_id: 'proj-pour-across-america',
+      type: TransactionType.Income,
+      amount: 3500.0,
+      category: 'Client Development',
+      description: 'Phase 2 feature development milestone payment',
+      transaction_date: currentMonthDate(4),
+      client: 'Diana',
+      notes: 'Note: $2,400 in additional development hours accrued since this milestone remain unbilled.',
+      created_at: nowIso,
+    },
+    {
+      id: 'tx-mars-retainer',
+      project_id: 'proj-mars-roofing',
+      type: TransactionType.Income,
+      amount: 1250.0,
+      category: 'Monthly Service Retainer',
+      description: 'Monthly web maintenance & lead operations retainer',
+      transaction_date: currentMonthDate(8),
+      client: 'Mars Roofing & Exteriors',
+      notes: 'Monthly recurring service + $450 unbilled storm landing page update pending.',
+      created_at: nowIso,
+    },
+    {
+      id: 'tx-apple-dev',
+      project_id: 'proj-caddlatch',
+      type: TransactionType.Expense,
+      amount: 99.0,
+      category: 'Software & Subscriptions',
+      description: 'Apple Developer Program annual membership renewal',
+      transaction_date: currentMonthDate(5),
+      client: null,
+      notes: 'Required for Caddlatch App Store distribution.',
+      created_at: nowIso,
+    },
+    {
+      id: 'tx-cloud-infra',
+      project_id: 'proj-intro',
+      type: TransactionType.Expense,
+      amount: 185.0,
+      category: 'Infrastructure & Hosting',
+      description: 'Supabase Pro, Vercel, and managed PostgreSQL hosting',
+      transaction_date: currentMonthDate(12),
+      client: null,
+      notes: 'Monthly studio infrastructure across active apps.',
+      created_at: nowIso,
+    },
+    {
+      id: 'tx-ai-api',
+      project_id: null,
+      type: TransactionType.Expense,
+      amount: 64.5,
+      category: 'AI & API Usage',
+      description: 'LLM API usage for StudioOS and product testing',
+      transaction_date: currentMonthDate(15),
+      client: null,
+      notes: 'Internal studio operations.',
+      created_at: nowIso,
+    },
+  ];
+
+  return { projects, tasks, transactions };
+}
